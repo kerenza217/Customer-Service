@@ -7,20 +7,20 @@ import csv
 
 app=Flask(__name__,template_folder="template")
 
-# db = mysql.connector.connect(
-#     host="localhost",
-#     username="root",
-#     password ="Root!234",
-#     database="member_care"
-# )
-
 db = mysql.connector.connect(
-    host=os.getenv("DB_HOST", "localhost"),
-    username=os.getenv("DB_USER", "root"),
-    password=os.getenv("DB_PASSWORD", "Root!234"),
-    database=os.getenv("DB_NAME", "member_care"),
-    port=int(os.getenv("DB_PORT", 3306)),
+    host="localhost",
+    username="root",
+    password ="Root!234",
+    database="member_care"
 )
+
+# db = mysql.connector.connect(
+#     host=os.getenv("DB_HOST", "localhost"),
+#     username=os.getenv("DB_USER", "root"),
+#     password=os.getenv("DB_PASSWORD", "Root!234"),
+#     database=os.getenv("DB_NAME", "member_care"),
+#     port=int(os.getenv("DB_PORT", 3306)),
+# )
 
 cursor = db.cursor(dictionary=True)
 
