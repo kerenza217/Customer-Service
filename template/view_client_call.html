@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Call Log</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <div class="header">
+        <div class="img--wrapper"><img class="img" src="{{ url_for('static', filename='logo.png') }}" alt="Logo"></div>
+    </div>
+
+    <h1>Client Call Log</h1>
+
+    <div class="container">
+        <table>
+            <tr>
+                <th>Company</th>
+                <th>Member Name</th>
+                <th>Membership Number</th>
+                <th>Call Details</th>
+                <th>Call Duration (Minutes)</th>
+                <th>Officer</th>
+                <th>Date Created</th>
+                <th>Status</th>
+            </tr>
+            {% for call in calls %}
+            <tr>
+                <td>{{ call.company }}</td>
+                <td>{{ call.member_name }}</td>
+                <td>{{ call.membership_number }}</td>
+                <td>{{ call.call_details }}</td>
+                <td>{{ call.call_duration }}</td>
+                <td>{{ call.officer }}</td>
+                <td>{{ call.date_created }}</td>
+                <td>{{ call.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <h2>Report</h2>
+    <p><strong>Total Calls:</strong> {{ report.total_calls }}</p>
+    <p><strong>Resolved Calls:</strong> {{ report.resolved_calls }}</p>
+    <p><strong>Pending Calls:</strong> {{ report.pending_calls }}</p>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Forms</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <div class="header">
+        <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div>
+    </div>
+
+    <h1>Download Forms</h1>
+
+    <form action="/download/all" method="get">
+        <button type="submit">Download All Forms</button>
+    </form>
+
+
+    <h2>Download Individual Forms</h2>
+    <form action="/download/pre_authorization" method="get">
+        <button type="submit">Download Pre-Authorization Form</button>
+    </form>
+
+    <form action="/download/dental_optical" method="get">
+        <button type="submit">Download Dental Optical Form</button>
+    </form>
+
+    <form action="/download/providers_call" method="get">
+        <button type="submit">Download Providers Call Form</button>
+    </form>
+
+    <form action="/download/client_call" method="get">
+        <button type="submit">Download Client Call Form</button>
+    </form>
+
+
+
+
+
+
+
+
+</body>
+</html>

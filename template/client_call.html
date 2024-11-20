@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Call Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <div class="header">
+        <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div>
+    </div>
+    
+    <h1>Client Call Form</h1>
+
+    <form action="/submit/client_call" method="POST">
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company"><br><br>
+
+        <label for="member_name">Member Name:</label>
+        <input type="text" id="member_name" name="member_name"><br><br>
+
+        <label for="membership_number">Membership Number:</label>
+        <input type="text" id="membership_number" name="membership_number"><br><br>
+
+        <label for="call_details">Call Details:</label>
+        <textarea id="call_details" name="call_details"></textarea><br><br>
+
+        <label for="call_duration">Call Duration (Minutes):</label>
+        <input type="number" id="call_duration" name="call_duration"><br><br>
+
+        <label for="officer">Officer:</label>
+        <input type="text" id="officer" name="officer"><br><br>
+
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status"><br><br>
+
+        <button type="submit">SUBMIT</button>
+    </form>
+    <!-- <button type="menu" class="btn"><a href="view_client_call.html">View Log</a></button>   -->
+
+</body>
+</html>
