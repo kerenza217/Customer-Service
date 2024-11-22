@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect,Response
+from flask import Flask,render_template, request,redirect,Response,jsonify
 import mysql.connector
 import os
 import io
@@ -7,6 +7,9 @@ from datetime import datetime
 
 
 app=Flask(__name__,template_folder="template")
+
+app.secret_key = os.getenv("SECRET_KEY", "Cosmo or no other")
+
 
 db = mysql.connector.connect(
     host="localhost",
@@ -261,83 +264,83 @@ def download_form(form_type):
         headers={"Content-Disposition": f"attachment;filename={form_type}.csv"}
    )
 
-@app.route('/download', methods=['GET'])
-def download():
-    # Get the selected form type and date range from query parameters
-    form_type = request.args.get('form_type')
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
+# @app.route('/download', methods=['GET'])
+# def download():
+#     # Get the selected form type and date range from query parameters
+#     form_type = request.args.get('form_type')
+#     start_date = request.args.get('start_date')
+#     end_date = request.args.get('end_date')
 
-    if not start_date or not end_date:
-        return "Start date and end date are required", 400
+#     if not start_date or not end_date:
+#         return "Start date and end date are required", 400
 
-    # Queries and headers for each form type
-    forms = {
-        'pre_authorization': (
-            "SELECT * FROM pre_authorization WHERE date_created BETWEEN %s AND %s",
-            ["Service Provider", "Company", "Member Name", "Member Number", "Auth Type", "Auth Details", "Amount", "Officer", "Date Created", "Status"]
-        ),
-        'dental_optical': (
-            "SELECT * FROM dental_optical_authorization WHERE date_created BETWEEN %s AND %s",
-            ["Service Provider", "Company", "Member Name", "Member Number", "Auth Type", "Auth Details", "Amount", "Officer", "Date Created", "Status"]
-        ),
-        'providers_call': (
-            "SELECT * FROM providers_call WHERE date_created BETWEEN %s AND %s",
-            ["Service Provider", "Call Details", "Call Duration", "Officer", "Date Created", "Status", "Attendant Name", "Contact", "Member Number"]
-        ),
-        'client_call': (
-            "SELECT * FROM client_call WHERE date_created BETWEEN %s AND %s",
-            ["Company", "Member Name", "Membership Number", "Call Details", "Call Duration", "Officer", "Date Created", "Status"]
-        )
-    }
+#     # Queries and headers for each form type
+#     forms = {
+#         'pre_authorization': (
+#             "SELECT * FROM pre_authorization WHERE date_created BETWEEN %s AND %s",
+#             ["Service Provider", "Company", "Member Name", "Member Number", "Auth Type", "Auth Details", "Amount", "Officer", "Date Created", "Status"]
+#         ),
+#         'dental_optical': (
+#             "SELECT * FROM dental_optical_authorization WHERE date_created BETWEEN %s AND %s",
+#             ["Service Provider", "Company", "Member Name", "Member Number", "Auth Type", "Auth Details", "Amount", "Officer", "Date Created", "Status"]
+#         ),
+#         'providers_call': (
+#             "SELECT * FROM providers_call WHERE date_created BETWEEN %s AND %s",
+#             ["Service Provider", "Call Details", "Call Duration", "Officer", "Date Created", "Status", "Attendant Name", "Contact", "Member Number"]
+#         ),
+#         'client_call': (
+#             "SELECT * FROM client_call WHERE date_created BETWEEN %s AND %s",
+#             ["Company", "Member Name", "Membership Number", "Call Details", "Call Duration", "Officer", "Date Created", "Status"]
+#         )
+#     }
 
-    # Handle individual forms
-    if form_type != 'all':
-        if form_type not in forms:
-            return "Invalid form type selected", 400
+#     # Handle individual forms
+#     if form_type != 'all':
+#         if form_type not in forms:
+#             return "Invalid form type selected", 400
 
-        query, headers = forms[form_type]
-        cursor.execute(query, (start_date, end_date))
-        rows = cursor.fetchall()
+#         query, headers = forms[form_type]
+#         cursor.execute(query, (start_date, end_date))
+#         rows = cursor.fetchall()
 
-        csv_file = generate_csv_from_rows(rows, headers)
-        return Response(
-            csv_file.getvalue(),
-            mimetype="text/csv",
-            headers={"Content-Disposition": f"attachment;filename={form_type}_filtered.csv"}
-        )
+#         csv_file = generate_csv_from_rows(rows, headers)
+#         return Response(
+#             csv_file.getvalue(),
+#             mimetype="text/csv",
+#             headers={"Content-Disposition": f"attachment;filename={form_type}_filtered.csv"}
+#         )
 
-    # Handle combined "All Forms"
-    combined_output = io.StringIO()
-    writer = csv.writer(combined_output)
+#     # Handle combined "All Forms"
+#     combined_output = io.StringIO()
+#     writer = csv.writer(combined_output)
 
-    for form, (query, headers) in forms.items():
-        writer.writerow([form.upper()])  # Section Header
-        writer.writerow(headers)  # Column Headers
-        cursor.execute(query, (start_date, end_date))
-        for row in cursor.fetchall():
-            writer.writerow(row.values())
-        writer.writerow([])  # Add a blank line between sections
+#     for form, (query, headers) in forms.items():
+#         writer.writerow([form.upper()])  # Section Header
+#         writer.writerow(headers)  # Column Headers
+#         cursor.execute(query, (start_date, end_date))
+#         for row in cursor.fetchall():
+#             writer.writerow(row.values())
+#         writer.writerow([])  # Add a blank line between sections
 
-    combined_output.seek(0)
-    return Response(
-        combined_output,
-        mimetype="text/csv",
-        headers={"Content-Disposition": "attachment;filename=all_forms_filtered.csv"}
-    )
+#     combined_output.seek(0)
+#     return Response(
+#         combined_output,
+#         mimetype="text/csv",
+#         headers={"Content-Disposition": "attachment;filename=all_forms_filtered.csv"}
+#     )
 
 
-def generate_csv_from_rows(rows, headers):
-    """
-    Helper function to generate CSV data from rows and headers.
-    """
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(headers)  # Write headers
-    for row in rows:
-        writer.writerow(row.values())  # Write rows
-    output.seek(0)
-    return output
+# def generate_csv_from_rows(rows, headers):
+#     """
+#     Helper function to generate CSV data from rows and headers.
+#     """
+#     output = io.StringIO()
+#     writer = csv.writer(output)
+#     writer.writerow(headers)  # Write headers
+#     for row in rows:
+#         writer.writerow(row.values())  # Write rows
+#     output.seek(0)
+#     return output
 
 
 

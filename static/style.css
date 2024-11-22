@@ -25,8 +25,8 @@ h1 {
     text-transform: uppercase;
 }
 form {
-    max-width: 100%;
-    width: 100%;
+    max-width: 50%;
+    width: 50%;
     margin: 0 auto;
     padding: 30px;
     background-color: white;
@@ -76,7 +76,7 @@ th {
 .container{
     max-width: 1100px;
     margin: 0 auto;
-    margin-top: 3rem;
+    /* margin-top: 3rem; */
 }
 .btn{
     background-color: #f55a5a;
@@ -127,7 +127,7 @@ a:hover {
 
 
 .sidebar {
-    width: 30%;
+    width: 20%;
     background-color: #ee8f8f;
     color: white;
     padding: 20px;
@@ -170,8 +170,8 @@ a:hover {
     padding: 20px;
     background-color: #ecf0f1;
     border-radius: 10px;
-    box-sizing: border-box;
-    overflow-y: auto;
+    /* box-sizing: border-box; */
+    width: 70%;
 }
 
 .main-content h1 {
@@ -186,10 +186,6 @@ a:hover {
 
 .container1 {
     display: flex;
-    height: auto;
+    /* height: auto; */
     /* flex-direction: column;    */
-}
-
-#form-content {
-    width: 100%;
 }
