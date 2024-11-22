@@ -25,7 +25,8 @@ h1 {
     text-transform: uppercase;
 }
 form {
-    max-width: 600px;
+    max-width: 100%;
+    width: 100%;
     margin: 0 auto;
     padding: 30px;
     background-color: white;
@@ -94,7 +95,17 @@ th {
     flex-direction: row-reverse;
     justify-content: flex-end;
     align-content: flex-end;
+    border-radius: 10px;
     
+}
+.top{
+    background-color: rgb(233, 120, 120);
+    height: 10vh;
+    margin-bottom: 1rem;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-content: flex-end;
+
 }
 
 .img--wrapper{
@@ -116,11 +127,13 @@ a:hover {
 
 
 .sidebar {
-    width: 250px;
+    width: 30%;
     background-color: #ee8f8f;
     color: white;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    /* flex: 0 0 250px; */
 }
 
 .sidebar .logo img {
@@ -156,6 +169,9 @@ a:hover {
     flex-grow: 1;
     padding: 20px;
     background-color: #ecf0f1;
+    border-radius: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .main-content h1 {
@@ -170,5 +186,10 @@ a:hover {
 
 .container1 {
     display: flex;
-    height: 180vh;
+    height: auto;
+    /* flex-direction: column;    */
+}
+
+#form-content {
+    width: 100%;
 }

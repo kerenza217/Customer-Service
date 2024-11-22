@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report and Downloads</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <h1>Reports and Downloads</h1>
+    </div>
+
+    <!-- <section>
+        <h2>Download All Forms</h2>
+        <form action="/download/all" method="get">
+            <button type="submit">Download Combined Report</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Download Individual Forms</h2>
+        <ul>
+            <li>
+                <form action="/download/pre_authorization" method="get">
+                    <button type="submit">Pre-Authorization Form</button>
+                </form>
+            </li>
+            <li>
+                <form action="/download/dental_optical" method="get">
+                    <button type="submit">Dental Optical Form</button>
+                </form>
+            </li>
+            <li>
+                <form action="/download/providers_call" method="get">
+                    <button type="submit">Providers Call Form</button>
+                </form>
+            </li>
+            <li>
+                <form action="/download/client_call" method="get">
+                    <button type="submit">Client Call Form</button>
+                </form>
+            </li>
+        </ul>
+    </section> -->
+
+    <section>
+        <h2>Download Reports</h2>
+<form action="/download" method="get">
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date" required>
+    
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date" required>
+
+    <label for="form_type">Select Form Type:</label>
+    <select id="form_type" name="form_type" required>
+        <option value="all">All Forms</option>
+        <option value="pre_authorization">Pre-Authorization</option>
+        <option value="dental_optical">Dental Optical</option>
+        <option value="providers_call">Providers Call</option>
+        <option value="client_call">Client Call</option>
+    </select>
+    
+    <button type="submit">Download</button>
+</form>
+    </section>
+</body>
+</html>

@@ -6,52 +6,14 @@
     <title>Customer service forms</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- <link rel="stylesheet" href="style.css"> -->
+    
 </head>
 <body>
-    <div class="header">
+    <div class="top">
         <!-- <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div> -->
+        <h1 style="color: white;">Welcome to Customer Service Forms</h3>  
     </div>
 
-    <!-- <h1>Select a Form</h1>
-    <div class="lists">
-    <ul>
-        <li><a href="/form/pre_authorization">Pre-Authorization Form</a></li><br>
-        <li><a href="/form/dental_optical">Dental Optical Authorization Form</a></li><br>
-        <li><a href="/form/client_call">Client Call Form</a></li><br>
-        <li><a href="/form/providers_call">Provider's Call Form</a></li><br>
-    </ul>
-
-    <h1>Select a Category to View Logs</h1>
-
-    <div class="buttons-container">
-        <button type="button" class="btn">
-            <a href="{{ url_for('view_pre_authorization') }}">Pre-Authorization Log</a>
-        </button>
-        <button type="button" class="btn">
-            <a href="{{ url_for('view_dental_optical') }}">Dental/Optical Authorization Log</a>
-        </button>
-        <button type="button" class="btn">
-            <a href="{{ url_for('view_client_call') }}">Client Call Log</a>
-        </button>
-        <button type="button" class="btn">
-            <a href="{{ url_for('view_providers_call') }}">Provider Call Log</a>
-        </button>
-    </div>
-
-    <h1>Select Forms to Download</h1>
-
-    Download all forms as one CSV -->
-    <!-- <button type="button" class="btn"><a href="{{ url_for('download_all') }}">Download All Forms (Combined)</a></button>
-
-    <h2>DOWNLOAD INDIVIDUAL FORMS:</h2>
-    <ul>
-        <li><a href="{{ url_for('download_form', form_type='pre_authorization') }}">Download Pre-Authorization Form</a></li><br>
-        <li><a href="{{ url_for('download_form', form_type='dental_optical') }}">Download Dental Optical Form</a></li><br>
-        <li><a href="{{ url_for('download_form', form_type='providers_call') }}">Download Providers Call Form</a></li><br>
-        <li><a href="{{ url_for('download_form', form_type='client_call') }}">Download Client Call Form</a></li><br>
-    </ul>
-
-</div> -->
 
 <div class="container1">
     <!-- Sidebar -->
@@ -63,12 +25,7 @@
 
 <nav>
     <h3>Select Form Template</h3>
-    <!-- <ul>
-        <li><a href="/form/pre_authorization">Pre-Authorization Form</a></li>
-        <li><a href="/form/dental_optical">Dental Optical Authorization Form</a></li>
-        <li><a href="/form/client_call">Client Call Form</a></li>
-        <li><a href="/form/providers_call">Provider's Call Form</a></li>
-    </ul> -->
+
     <ul>
         <li><a href="#" class="form-link" data-form="pre_authorization">Pre-Authorization Form</a></li>
         <li><a href="#" class="form-link" data-form="dental_optical">Dental Optical Authorization Form</a></li>
@@ -84,23 +41,21 @@
         <li><a href="{{ url_for('view_providers_call') }}">Provider Call Log</a></li>
     </ul>
     <hr>
-    <h3>Download Forms</h3>
-    <ul>
-        <li><a href="{{ url_for('download_all') }}">Download All Forms (Combined)</a></li>
-        <li><a href="{{ url_for('download_form', form_type='pre_authorization') }}">Download Pre-Authorization Form</a></li>
-        <li><a href="{{ url_for('download_form', form_type='dental_optical') }}">Download Dental Optical Form</a></li>
-        <li><a href="{{ url_for('download_form', form_type='providers_call') }}">Download Providers Call Form</a></li>
-        <li><a href="{{ url_for('download_form', form_type='client_call') }}">Download Client Call Form</a></li>
-    </ul>
+
+    <h3>Generate Reports</h3>
+<ul>
+    <li><a href="{{ url_for('report_page') }}">View and Download Reports</a></li>
+</ul>
+
     <hr>
 </nav>
 </div>
 
 <!-- Main Content -->
 <div class="main-content">
-    <h1>Welcome to Customer Service Forms</h1>
-    <p>Select a form, view logs, or download records using the sidebar menu.</p>
-    <div id="form-content"></div>
+    <!-- <a href=""><h1>Welcome to Customer Service Forms</h1>
+    <p>Select a form, view logs, or download records using the sidebar menu.</p> -->
+    <div id="form-content"></div></a>
 </div>
 
 </div>
@@ -110,6 +65,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Listen for clicks on sidebar links
         const formLinks = document.querySelectorAll('.form-link');
+        const contentContainer = document.getElementById('form-content');
         
         formLinks.forEach(link => {
             link.addEventListener('click', function (e) {
@@ -123,7 +79,7 @@
 
         // Function to load the form content
         function loadFormContent(formType) {
-            const contentContainer = document.getElementById('form-content');
+            // const contentContainer = document.getElementById('form-content');
             contentContainer.innerHTML = '<p>Loading...</p>'; // Show loading message
             
             // Fetch the form HTML using AJAX
@@ -131,14 +87,37 @@
                 .then(response => response.text())
                 .then(html => {
                     contentContainer.innerHTML = html; // Replace loading message with form content
+                    const form = contentContainer.querySelector('form')
+                    if(form){
+                        form.addEventListener('submit',handleFormSubmit);
+                    }
                 })
                 .catch(error => {
                     contentContainer.innerHTML = '<p>Failed to load content.</p>'; // Show error message if fetch fails
                     console.error('Error loading form content:', error);
                 });
         }
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            // Handle form submission here (e.g., using fetch to submit data)
+            console.log('Form submitted');
+        }
     });
+
+    
+
 </script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul>
+      {% for category, message in messages %}
+        <li class="alert alert-{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 
 </body>
 

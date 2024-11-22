@@ -3,6 +3,7 @@ import mysql.connector
 import os
 import io
 import csv
+from datetime import datetime
 
 
 app=Flask(__name__,template_folder="template")
@@ -46,70 +47,97 @@ def client_call_form():
 def providers_call_form():
     return render_template('provider_call.html')
 
+@app.route('/form/report', methods=['GET', 'POST'])
+def report_page():
+    return render_template('Report.html')  # Render the new report page template
+
+
 # Routes to handle form submissions for each category
+
+from flask import flash, redirect, request
 
 @app.route('/submit/pre_authorization', methods=['POST'])
 def submit_pre_authorization():
-    data = (
-        request.form['service_provider'], request.form['company'],
-        request.form['member_name'], request.form['member_number'],
-        request.form['authorization_type'], request.form['authorization_details'],
-        float(request.form['amount']), request.form['officer'],
-        request.form['status']
-    )
-    cursor.execute(
-        "INSERT INTO pre_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        data
-    )
-    
-    db.commit()
+    try:
+        data = (
+            request.form['service_provider'], request.form['company'],
+            request.form['member_name'], request.form['member_number'],
+            request.form['authorization_type'], request.form['authorization_details'],
+            float(request.form['amount']), request.form['officer'],
+            request.form['status']
+        )
+        cursor.execute(
+            "INSERT INTO pre_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            data
+        )
+        db.commit()
+        flash("Pre-authorization submitted successfully!", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"An error occurred: {e}", "danger")
     return redirect('/')
 
 @app.route('/submit/dental_optical', methods=['POST'])
 def submit_dental_optical():
-    data = (
-        request.form['service_provider'], request.form['company'],
-        request.form['member_name'], request.form['member_number'],
-        request.form['authorization_type'], request.form['authorization_details'],
-        float(request.form['amount']), request.form['officer'],
-        request.form['status']
-    )
-    cursor.execute(
-        "INSERT INTO dental_optical_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        data
-    )
-    db.commit()
+    try:
+        data = (
+            request.form['service_provider'], request.form['company'],
+            request.form['member_name'], request.form['member_number'],
+            request.form['authorization_type'], request.form['authorization_details'],
+            float(request.form['amount']), request.form['officer'],
+            request.form['status']
+        )
+        cursor.execute(
+            "INSERT INTO dental_optical_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            data
+        )
+        db.commit()
+        flash("Dental/Optical authorization submitted successfully!", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"An error occurred: {e}", "danger")
     return redirect('/')
 
 @app.route('/submit/client_call', methods=['POST'])
 def submit_client_call():
-    data = (
-        request.form['company'], request.form['member_name'],
-        request.form['membership_number'], request.form['call_details'],
-        int(request.form['call_duration']), request.form['officer'],
-        request.form['status']
-    )
-    cursor.execute(
-        "INSERT INTO client_call (company, member_name, membership_number, call_details, call_duration, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-        data
-    )
-    db.commit()
+    try:
+        data = (
+            request.form['company'], request.form['member_name'],
+            request.form['membership_number'], request.form['call_details'],
+            int(request.form['call_duration']), request.form['officer'],
+            request.form['status']
+        )
+        cursor.execute(
+            "INSERT INTO client_call (company, member_name, membership_number, call_details, call_duration, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            data
+        )
+        db.commit()
+        flash("Client call submitted successfully!", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"An error occurred: {e}", "danger")
     return redirect('/')
 
 @app.route('/submit/providers_call', methods=['POST'])
 def submit_providers_call():
-    data = (
-        request.form['service_provider'], request.form['call_details'],
-        int(request.form['call_duration']), request.form['officer'],
-        request.form['status'], request.form['attendant_name'],
-        request.form['contact'], request.form['member_number']
-    )
-    cursor.execute(
-        "INSERT INTO providers_call (service_provider, call_details, call_duration, officer, status, attendant_name, contact, member_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-        data
-    )
-    db.commit()
+    try:
+        data = (
+            request.form['service_provider'], request.form['call_details'],
+            int(request.form['call_duration']), request.form['officer'],
+            request.form['status'], request.form['attendant_name'],
+            request.form['contact'], request.form['member_number']
+        )
+        cursor.execute(
+            "INSERT INTO providers_call (service_provider, call_details, call_duration, officer, status, attendant_name, contact, member_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            data
+        )
+        db.commit()
+        flash("Provider's call submitted successfully!", "success")
+    except Exception as e:
+        db.rollback()
+        flash(f"An error occurred: {e}", "danger")
     return redirect('/')
+
 
 #viewing the database
 @app.route('/view/pre_authorization')
@@ -159,11 +187,7 @@ def generate_report(table_name):
         'pending_calls': pending_calls
     }
 
-
-# Database connection (already set up in your code)
-# Assuming db and cursor are configured as above
-
-# Helper function to fetch data and generate CSV
+#for downloads
 def generate_csv(query, headers):
     output = io.StringIO()
     writer = csv.writer(output)
@@ -235,10 +259,87 @@ def download_form(form_type):
         csv_file.getvalue(),
         mimetype="text/csv",
         headers={"Content-Disposition": f"attachment;filename={form_type}.csv"}
+   )
+
+@app.route('/download', methods=['GET'])
+def download():
+    # Get the selected form type and date range from query parameters
+    form_type = request.args.get('form_type')
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    if not start_date or not end_date:
+        return "Start date and end date are required", 400
+
+    # Queries and headers for each form type
+    forms = {
+        'pre_authorization': (
+            "SELECT * FROM pre_authorization WHERE date_created BETWEEN %s AND %s",
+            ["Service Provider", "Company", "Member Name", "Member Number", "Auth Type", "Auth Details", "Amount", "Officer", "Date Created", "Status"]
+        ),
+        'dental_optical': (
+            "SELECT * FROM dental_optical_authorization WHERE date_created BETWEEN %s AND %s",
+            ["Service Provider", "Company", "Member Name", "Member Number", "Auth Type", "Auth Details", "Amount", "Officer", "Date Created", "Status"]
+        ),
+        'providers_call': (
+            "SELECT * FROM providers_call WHERE date_created BETWEEN %s AND %s",
+            ["Service Provider", "Call Details", "Call Duration", "Officer", "Date Created", "Status", "Attendant Name", "Contact", "Member Number"]
+        ),
+        'client_call': (
+            "SELECT * FROM client_call WHERE date_created BETWEEN %s AND %s",
+            ["Company", "Member Name", "Membership Number", "Call Details", "Call Duration", "Officer", "Date Created", "Status"]
+        )
+    }
+
+    # Handle individual forms
+    if form_type != 'all':
+        if form_type not in forms:
+            return "Invalid form type selected", 400
+
+        query, headers = forms[form_type]
+        cursor.execute(query, (start_date, end_date))
+        rows = cursor.fetchall()
+
+        csv_file = generate_csv_from_rows(rows, headers)
+        return Response(
+            csv_file.getvalue(),
+            mimetype="text/csv",
+            headers={"Content-Disposition": f"attachment;filename={form_type}_filtered.csv"}
+        )
+
+    # Handle combined "All Forms"
+    combined_output = io.StringIO()
+    writer = csv.writer(combined_output)
+
+    for form, (query, headers) in forms.items():
+        writer.writerow([form.upper()])  # Section Header
+        writer.writerow(headers)  # Column Headers
+        cursor.execute(query, (start_date, end_date))
+        for row in cursor.fetchall():
+            writer.writerow(row.values())
+        writer.writerow([])  # Add a blank line between sections
+
+    combined_output.seek(0)
+    return Response(
+        combined_output,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment;filename=all_forms_filtered.csv"}
     )
 
 
-    
+def generate_csv_from_rows(rows, headers):
+    """
+    Helper function to generate CSV data from rows and headers.
+    """
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(headers)  # Write headers
+    for row in rows:
+        writer.writerow(row.values())  # Write rows
+    output.seek(0)
+    return output
+
+
 
 
 if __name__ == '__main__':

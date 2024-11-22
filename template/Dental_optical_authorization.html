@@ -8,9 +8,9 @@
     <!-- <link rel="stylesheet" href="style.css"> -->
 </head>
 <body>
-    <div class="header">
+    <!-- <div class="header">
         <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div>
-    </div>
+    </div> -->
     <h1>Dental/Optical Authorization Form</h1>
 
 
@@ -47,6 +47,11 @@
     </form>
 
     <!-- <button type="menu" class="btn"><a href="view_dental_optical.html">View Log</a></button>   -->
+
+    {% extends 'all_forms.html' %}
+{% block content %}
+    <!-- Your form content here -->
+{% endblock %}
 
 </body>
 </html>

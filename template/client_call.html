@@ -8,9 +8,9 @@
     <!-- <link rel="stylesheet" href="style.css"> -->
 </head>
 <body>
-    <div class="header">
+    <!-- <div class="header">
         <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div>
-    </div>
+    </div> -->
     
     <h1>Client Call Form</h1>
 
@@ -39,6 +39,11 @@
         <button type="submit">SUBMIT</button>
     </form>
     <!-- <button type="menu" class="btn"><a href="view_client_call.html">View Log</a></button>   -->
+
+    {% extends 'all_forms.html' %}
+{% block content %}
+    <!-- Your form content here -->
+{% endblock %}
 
 </body>
 </html>
