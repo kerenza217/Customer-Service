@@ -16,105 +16,57 @@
 
 
 <div class="container1">
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
         </div>
 
 
-<nav>
-    <h3>Select Form Template</h3>
+    <nav>
+        <h3>Select Form Template</h3>
 
-    <!-- <ul>
-        <li><a href="#" class="form-link" data-form="pre_authorization">Pre-Authorization Form</a></li>
-        <li><a href="#" class="form-link" data-form="dental_optical">Dental Optical Authorization Form</a></li>
-        <li><a href="#" class="form-link" data-form="client_call">Client Call Form</a></li>
-        <li><a href="#" class="form-link" data-form="providers_call">Provider's Call Form</a></li>
-    </ul> -->
+        <!-- <ul>
+            <li><a href="#" class="form-link" data-form="pre_authorization">Pre-Authorization Form</a></li>
+            <li><a href="#" class="form-link" data-form="dental_optical">Dental Optical Authorization Form</a></li>
+            <li><a href="#" class="form-link" data-form="client_call">Client Call Form</a></li>
+            <li><a href="#" class="form-link" data-form="providers_call">Provider's Call Form</a></li>
+        </ul> -->
+        <ul>
+        <ul>
+            <li><a href="{{ url_for('pre_authorization_form') }}">Pre-Authorization Form</a></li>
+            <li><a href="{{ url_for('dental_optical_form') }}">Dental Optical Authorization Form</a></li>
+            <li><a href="{{ url_for('client_call_form') }}">Client Call Form</a></li>
+            <li><a href="{{ url_for('providers_call_form') }}">Provider's Call Form</a></li>
+        </ul>
+
+        </ul>
+        <hr>
+        <h3>Veiw Forms</h3>
+        <ul>
+            <li><a href="{{ url_for('view_pre_authorization') }}">Pre-Authorization Log</a></li>
+            <li><a href="{{ url_for('view_dental_optical') }}">Dental/Optical Authorization Log</a></li>
+            <li><a href="{{ url_for('view_client_call') }}">Client Call Log</a></li>
+            <li><a href="{{ url_for('view_providers_call') }}">Provider Call Log</a></li>
+        </ul>
+        <hr>
+
+        <h3>Generate Reports</h3>
     <ul>
-        <li><a href="/form/pre_authorization">Pre-Authorization Form</a></li>
-        <li><a href="/form/dental_optical">Dental Optical Authorization Form</a></li>
-        <li><a href="/form/client_call">Client Call Form</a></li>
-        <li><a href="/form/providers_call">Provider's Call Form</a></li>
+        <li><a href="{{ url_for('report_page') }}">View and Download Reports</a></li>
     </ul>
-    <hr>
-    <h3>Veiw Forms</h3>
-    <ul>
-        <li><a href="{{ url_for('view_pre_authorization') }}">Pre-Authorization Log</a></li>
-        <li><a href="{{ url_for('view_dental_optical') }}">Dental/Optical Authorization Log</a></li>
-        <li><a href="{{ url_for('view_client_call') }}">Client Call Log</a></li>
-        <li><a href="{{ url_for('view_providers_call') }}">Provider Call Log</a></li>
-    </ul>
-    <hr>
 
-    <h3>Generate Reports</h3>
-<ul>
-    <li><a href="{{ url_for('report_page') }}">View and Download Reports</a></li>
-</ul>
+        <hr>
+    </nav>
+    </div>
 
-    <hr>
-</nav>
-</div>
-
-<!-- Main Content -->
-<div class="main-content">
-
-    <div id="form-content"><p>Welcome to Customer Service Forms</p></div></a>
-</div>
+    <!-- Main Content -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+        <div id="form-content"><p>Welcome to Customer Service Forms</p></div></a>
+    </div>
 
 </div>
 
-<!-- JavaScript -->
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Listen for clicks on sidebar links
-        const formLinks = document.querySelectorAll('.form-link');
-        // const contentContainer = document.getElementById('form-content');
-        
-        formLinks.forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent default link behavior
-                const formType = this.getAttribute('data-form');
-                
-                // Make an AJAX request to fetch the form content
-                loadFormContent(formType);
-            });
-        });
-
-        // Function to load the form content
-        function loadFormContent(formType) {
-            const contentContainer = document.getElementById('form-content');
-            contentContainer.innerHTML = '<p>Loading...</p>'; // Show loading message
-            
-            // Fetch the form HTML using AJAX
-            fetch(`/form/${formType}`)
-                .then(response => response.text())
-                .then(html => {
-                    contentContainer.innerHTML = html; // Replace loading message with form content
-                    // const form = contentContainer.querySelector('form')
-                    // if(form){
-                    //     form.addEventListener('submit',handleFormSubmit);
-                    // }
-                    history.pushState(null, '', `/form/${formType}`);
-                })
-                .catch(error => {
-                    contentContainer.innerHTML = '<p>Failed to load content.</p>'; // Show error message if fetch fails
-                    console.error('Error loading form content:', error);
-                });
-        }
-
-        
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            // Handle form submission here (e.g., using fetch to submit data)
-            console.log('Form submitted');
-        }
-
-    });    
-
-</script> -->
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
