@@ -24,6 +24,7 @@
                 <th>Officer</th>
                 <th>Date Created</th>
                 <th>Status</th>
+                <th>Escalated To</th>
             </tr>
             {% for call in calls %}
             <tr>
@@ -35,14 +36,22 @@
                 <td>{{ call.officer }}</td>
                 <td>{{ call.date_created }}</td>
                 <td>{{ call.status }}</td>
+                <td>{{ call.escalated_to }}</td>
             </tr>
             {% endfor %}
         </table>
     </div>
 
     <h2>Report</h2>
+<p><strong>Total Calls:</strong> {{ report.total_calls }}</p>
+<p><strong>Resolved Calls (Approved):</strong> {{ report.resolved_calls }}</p>
+<p><strong>Unresolved Calls (Unapproved):</strong> {{ report.unresolved_calls }}</p>
+<p><strong>Escalated Calls:</strong> {{ report.escalated_calls }}</p>
+
+    <!-- <h2>Report</h2>
     <p><strong>Total Calls:</strong> {{ report.total_calls }}</p>
     <p><strong>Resolved Calls:</strong> {{ report.resolved_calls }}</p>
-    <p><strong>Pending Calls:</strong> {{ report.pending_calls }}</p>
+    <p><strong>Pending Calls:</strong> {{ report.pending_calls }}</p> -->
 </body>
 </html>
+

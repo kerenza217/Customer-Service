@@ -31,7 +31,7 @@ cursor = db.cursor(dictionary=True)
 
 @app.route('/')
 def select_form():
-    return render_template('dashboard.html')  # This page should have links to each form
+    return render_template('all_forms.html')  # This page should have links to each form
 
 # Routes to render HTML forms for each category
 @app.route('/form/pre_authorization')
@@ -63,15 +63,17 @@ from flask import flash, redirect, request
 @app.route('/submit/pre_authorization', methods=['POST'])
 def submit_pre_authorization():
     try:
+        escalated_to = request.form.get('escalated_to',None)
         data = (
             request.form['service_provider'], request.form['company'],
             request.form['member_name'], request.form['member_number'],
             request.form['authorization_type'], request.form['authorization_details'],
             float(request.form['amount']), request.form['officer'],
-            request.form['status']
+            request.form['status'],
+            escalated_to
         )
         cursor.execute(
-            "INSERT INTO pre_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO pre_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status,escalated_to) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
             data
         )
         db.commit()
@@ -84,15 +86,17 @@ def submit_pre_authorization():
 @app.route('/submit/dental_optical', methods=['POST'])
 def submit_dental_optical():
     try:
+        escalated_to = request.form.get('escalated_to',None)
         data = (
             request.form['service_provider'], request.form['company'],
             request.form['member_name'], request.form['member_number'],
             request.form['authorization_type'], request.form['authorization_details'],
             float(request.form['amount']), request.form['officer'],
-            request.form['status']
+            request.form['status'],
+            escalated_to
         )
         cursor.execute(
-            "INSERT INTO dental_optical_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO dental_optical_authorization (service_provider, company, member_name, member_number, authorization_type, authorization_details, amount, officer, status,escalated_to) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)",
             data
         )
         db.commit()
@@ -105,14 +109,16 @@ def submit_dental_optical():
 @app.route('/submit/client_call', methods=['POST'])
 def submit_client_call():
     try:
+        escalated_to = request.form.get('escalated_to',None)
         data = (
             request.form['company'], request.form['member_name'],
             request.form['membership_number'], request.form['call_details'],
             int(request.form['call_duration']), request.form['officer'],
-            request.form['status']
+            request.form['status'],
+            escalated_to
         )
         cursor.execute(
-            "INSERT INTO client_call (company, member_name, membership_number, call_details, call_duration, officer, status) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO client_call (company, member_name, membership_number, call_details, call_duration, officer, status,escalated_to) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
             data
         )
         db.commit()
@@ -124,17 +130,20 @@ def submit_client_call():
 
 @app.route('/submit/providers_call', methods=['POST'])
 def submit_providers_call():
+    escalated_to = request.form.get('escalated_to',None)
     try:
         data = (
             request.form['service_provider'], request.form['call_details'],
             int(request.form['call_duration']), request.form['officer'],
             request.form['status'], request.form['attendant_name'],
-            request.form['contact'], request.form['member_number']
+            request.form['contact'], request.form['member_number'],
+            escalated_to
         )
         cursor.execute(
-            "INSERT INTO providers_call (service_provider, call_details, call_duration, officer, status, attendant_name, contact, member_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO providers_call (service_provider, call_details, call_duration, officer, status, attendant_name, contact, member_number,escalated_to) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
             data
         )
+        
         db.commit()
         flash("Provider's call submitted successfully!", "success")
     except Exception as e:
@@ -170,25 +179,57 @@ def view_providers_call():
     cursor.execute("SELECT * FROM providers_call")
     calls = cursor.fetchall()
     report = generate_report('providers_call')
+    
     return render_template('view_providers_call.html', calls=calls, report=report)
 
+
+
+# def generate_report(table_name):
+#     # Total calls
+#     cursor.execute(f"SELECT COUNT(*) AS total_calls FROM {table_name}")
+#     total_calls = cursor.fetchone()['total_calls']
+    
+#     # Resolved calls
+#     cursor.execute(f"SELECT COUNT(*) AS resolved_calls FROM {table_name} WHERE status = 'Resolved'")
+#     resolved_calls = cursor.fetchone()['resolved_calls']
+    
+#     # Calculate pending calls
+#     pending_calls = total_calls - resolved_calls
+    
+#     # Return as a dictionary
+#     return {
+#         'total_calls': total_calls,
+#         'resolved_calls': resolved_calls,
+#         'pending_calls': pending_calls
+#     }
 def generate_report(table_name):
     # Total calls
     cursor.execute(f"SELECT COUNT(*) AS total_calls FROM {table_name}")
-    total_calls = cursor.fetchone()['total_calls']
+    total_calls = cursor.fetchone()['total_calls'] or 0
+    print("Total calls:", total_calls)
     
-    # Resolved calls
-    cursor.execute(f"SELECT COUNT(*) AS resolved_calls FROM {table_name} WHERE status = 'Resolved'")
-    resolved_calls = cursor.fetchone()['resolved_calls']
+    # Resolved calls (assuming 'Approved' means resolved)
+    cursor.execute(f"SELECT COUNT(*) AS resolved_calls FROM {table_name} WHERE status = 'Approved'")
+    resolved_calls = cursor.fetchone()['resolved_calls'] or 0
+    print("Resolved calls (Approved):", resolved_calls)
     
-    # Calculate pending calls
-    pending_calls = total_calls - resolved_calls
+    # Unresolved calls (assuming 'Unapproved' means unresolved)
+    cursor.execute(f"SELECT COUNT(*) AS unresolved_calls FROM {table_name} WHERE status = 'Unapproved'")
+    unresolved_calls = cursor.fetchone()['unresolved_calls'] or 0
+    print("Unresolved calls (Unapproved):", unresolved_calls)
+    
+    # Pending calls (explicitly labeled as 'Pending')
+    cursor.execute(f"SELECT COUNT(*) AS escalated_calls FROM {table_name} WHERE status = 'Escalated'")
+    result = cursor.fetchone()['escalated_calls']
+    escalated_calls = result['escalated_calls'] if result and 'escalated_calls' in result else 0
+    print("Escalated call results:", result)
     
     # Return as a dictionary
     return {
         'total_calls': total_calls,
         'resolved_calls': resolved_calls,
-        'pending_calls': pending_calls
+        'unresolved_calls': unresolved_calls,
+        'escalated_calls': escalated_calls
     }
 
 #for downloads

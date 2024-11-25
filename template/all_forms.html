@@ -25,21 +25,21 @@
     <nav>
         <h3>Select Form Template</h3>
 
-        <!-- <ul>
+        <ul>
             <li><a href="#" class="form-link" data-form="pre_authorization">Pre-Authorization Form</a></li>
             <li><a href="#" class="form-link" data-form="dental_optical">Dental Optical Authorization Form</a></li>
             <li><a href="#" class="form-link" data-form="client_call">Client Call Form</a></li>
             <li><a href="#" class="form-link" data-form="providers_call">Provider's Call Form</a></li>
-        </ul> -->
-        <ul>
-        <ul>
+        </ul>
+        <!-- <ul> -->
+        <!-- <ul>
             <li><a href="{{ url_for('pre_authorization_form') }}">Pre-Authorization Form</a></li>
             <li><a href="{{ url_for('dental_optical_form') }}">Dental Optical Authorization Form</a></li>
             <li><a href="{{ url_for('client_call_form') }}">Client Call Form</a></li>
             <li><a href="{{ url_for('providers_call_form') }}">Provider's Call Form</a></li>
-        </ul>
+        </ul> -->
 
-        </ul>
+        <!-- </ul> -->
         <hr>
         <h3>Veiw Forms</h3>
         <ul>
@@ -61,22 +61,67 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        {% block content %}{% endblock %}
         <div id="form-content"><p>Welcome to Customer Service Forms</p></div></a>
     </div>
 
 </div>
 
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul>
-      {% for category, message in messages %}
-        <li class="alert alert-{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+<div class="container mt-4">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="alert-container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Page Content -->
+    {% block content %}{% endblock %}
+</div>
+
+
+<script>
+    // Function to load the content dynamically
+    document.addEventListener('DOMContentLoaded', function () {
+        // Listen for clicks on sidebar links
+        const formLinks = document.querySelectorAll('.form-link');
+        
+        formLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default link behavior
+                const formType = this.getAttribute('data-form');
+                
+                // Make an AJAX request to fetch the form content based on the clicked link
+                loadFormContent(formType);
+            });
+        });
+        
+        // Function to load the form content
+        function loadFormContent(formType) {
+            const contentContainer = document.getElementById('form-content');
+            contentContainer.innerHTML = '<p>Loading...</p>'; // Show loading message
+            
+            // Fetch the form HTML using AJAX (assuming Flask route is set up)
+            fetch(`/form/${formType}`)
+                .then(response => response.text())
+                .then(html => {
+                    contentContainer.innerHTML = html; // Replace loading message with form content
+                })
+                .catch(error => {
+                    contentContainer.innerHTML = '<p>Failed to load content.</p>'; // Show error message if the fetch fails
+                    console.error('Error loading form content:', error);
+                });
+        }
+    });
+</script>
+
 
 
 </body>

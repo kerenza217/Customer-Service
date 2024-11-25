@@ -25,6 +25,7 @@
                 <th>Attendant Name</th>
                 <th>Contact</th>
                 <th>Member Number</th>
+                <th>Escalated To</th>
             </tr>
             {% for call in calls %}
             <tr>
@@ -37,14 +38,24 @@
                 <td>{{ call.attendant_name }}</td>
                 <td>{{ call.contact }}</td>
                 <td>{{ call.member_number }}</td>
+                <td>{{ call.escalated_to }}</td>
+
+                
             </tr>
             {% endfor %}
         </table>
     </div>
 
-    <h2>Report</h2>
+    <!-- <h2>Report</h2>
     <p><strong>Total Calls:</strong> {{ report.total_calls }}</p>
     <p><strong>Resolved Calls:</strong> {{ report.resolved_calls }}</p>
-    <p><strong>Pending Calls:</strong> {{ report.pending_calls }}</p>
+    <p><strong>Pending Calls:</strong> {{ report.pending_calls }}</p> -->
+
+    <h2>Report</h2>
+    <p><strong>Total Calls:</strong> {{ report.total_calls }}</p>
+    <p><strong>Resolved Calls (Approved):</strong> {{ report.resolved_calls }}</p>
+    <p><strong>Unresolved Calls (Unapproved):</strong> {{ report.unresolved_calls }}</p>
+    <p><strong>Escalated Calls (Escalated):</strong> {{ report.escalated_calls }}</p>
+
 </body>
 </html>

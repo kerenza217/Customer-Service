@@ -8,9 +8,9 @@
     <!-- <link rel="stylesheet" href="style.css"> -->
 </head>
 <body>
-    <!-- <div class="header">
-        <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div>
-    </div> -->
+    <div class="header">
+        <!-- <div class="img--wrapper"><img class="img" src="../static/logo.png" alt="cosmo logo" ></div> -->
+    </div>
     <h1>Providers Call Form</h1>
 
     
@@ -28,7 +28,17 @@
         <input type="text" id="officer" name="officer"><br><br>
 
         <label for="status">Status:</label>
-        <input type="text" id="status" name="status"><br><br>
+        <select id="status" name="status" required>
+            <option value="Approved">Approved</option>
+            <option value="Unapproved">Unapproved</option>
+            <option value="Escalated">Escalated</option>
+        </select>
+                <br><br>
+                
+                <div id="escalation_field" style="display: none;">
+                    <label for="escalated_to">Escalated To:</label>
+                    <input type="text" id="escalated_to" name="escalated_to"><br><br>
+                </div><br><br>
 
         <label for="attendant_name">Attendant Name:</label>
         <input type="text" id="attendant_name" name="attendant_name"><br><br>
@@ -42,11 +52,19 @@
         <button type="submit">SUBMIT</button>
     </form>
     <!-- <button type="menu" class="btn"><a href="view_providers_call.html">View Log</a></button>   -->
+    <script>
+        function toggleEscalationField() {
+            const status = document.getElementById('status').value;
+            const escalationField = document.getElementById('escalation_field');
+            if (status === 'Escalated') {
+                escalationField.style.display = 'block';
+            } else {
+                escalationField.style.display = 'none';
+                document.getElementById('escalated_to').value = ''; // Clear the value
+            }
+        }
+    </script>
 
-    {% extends 'all_forms.html' %}
-{% block content %}
-    <!-- Your form content here -->
-{% endblock %}
 
 </body>
 </html>
