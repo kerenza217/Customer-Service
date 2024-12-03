@@ -113,13 +113,32 @@
                 .then(response => response.text())
                 .then(html => {
                     contentContainer.innerHTML = html; // Replace loading message with form content
+
+                    const statusDropdown = contentContainer.querySelector('#status');
+                    const escalationField = contentContainer.querySelector('#escalation_field');
+
+                        if (statusDropdown) {
+                            statusDropdown.addEventListener('change', function () {
+                                const selectedValue = statusDropdown.value.trim();
+                                if (selectedValue === 'Escalated') {
+                                    escalationField.style.display = 'block';
+                                } else {
+                                    escalationField.style.display = 'none';
+                                }
+                            });
+                        }
                 })
+
+
+                
                 .catch(error => {
                     contentContainer.innerHTML = '<p>Failed to load content.</p>'; // Show error message if the fetch fails
                     console.error('Error loading form content:', error);
                 });
         }
     });
+
+    
 </script>
 
 

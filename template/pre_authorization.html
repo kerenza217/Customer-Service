@@ -57,6 +57,44 @@
 
         <!-- <input type="submit" value="Submit"> -->
     </form>
+<!-- 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusDropdown = document.getElementById('status');
+            const escalationField = document.getElementById('escalation_field');
+
+            if (statusDropdown && escalationField) {
+                statusDropdown.addEventListener('change', function () {
+                    const selectedValue = statusDropdown.value.trim();
+                    console.log("Selected value:", selectedValue); // Debugging
+                    if (selectedValue === 'Escalated') {
+                        escalationField.style.display = 'block'; // Show field
+                    } else {
+                        escalationField.style.display = 'none'; // Hide field
+                    }
+                });
+            } else {
+                console.error("Dropdown or escalation field not found!");
+            }
+        });
+    </script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusDropdown = document.getElementById('status');
+            const escalationField = document.getElementById('escalation_field');
+    
+            if (statusDropdown) {
+                statusDropdown.addEventListener('change', function () {
+                    const selectedValue = statusDropdown.value.trim();
+                    if (selectedValue === 'Escalated') {
+                        escalationField.style.display = 'block';
+                    } else {
+                        escalationField.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 
 
 
